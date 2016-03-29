@@ -31,4 +31,15 @@
 	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
 		args="-urdf -z 1 -model roomba -param robot_description"/>
 
+
+<!-- roombaをROSで動かせるようにする -->
+	<rosparam file="$(find knmrobot_control)/config/roomba_test.yaml" command="load"/>
+
+	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/roomba_test" args="joint_state_controller
+		mobile_base_controller"/>
+	
+	<node name="robot_state_publiser" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+		<remap from="/joint_states" to="/roomba_test/joint_states"/>
+	</node>
+
 </launch>
